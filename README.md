@@ -32,7 +32,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 ### Prerequisites
 
 - Visual Studio (or another C# development environment)
-- .NET Framework (version X.X.X)
+- .NET Framework (version 6.0)
 - SQL Server (or another database server)
 
 ### Installation
