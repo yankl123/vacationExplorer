@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/css/project.css?v=1" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title></title>
+    <script>
+        $(document).ready(function () {
+            $("#flip").click(function () {    
+                $("#panel").slideToggle("slow");
+            });
+        });
+    </script>
+</head>
+<body style="margin:0;height:100vh;width:100vw;">
+
+
+    <div style="margin-top:120px;padding-bottom:200px;">
+        <form method="get">
+                <div class="col-md-1"style="float:right;margin-right:550px;margin-left:80px;background-color:gainsboro;padding-top:20px;">
+                    <div class="form-group">
+                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                        <label for="vehicle1">כל האזורים</label><br>
+                        <br />
+                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                        <label for="vehicle1"> I have a bike</label><br>
+                        <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                        <label for="vehicle2"> I have a car</label><br>
+                        <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                        <label for="vehicle3"> I have a boat</label><br><br>
+                    </div>
+                </div>
+
+            <div class="col-md-1"style="float:right;margin-left:100px;background-color:gainsboro;padding-top:20px;" >
+                <div class="form-group">
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                    <label for="vehicle1"> כל הקטגרוריות</label><br>
+                    <br />
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                    <label for="vehicle1"> I have a bike</label><br>
+                    <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                    <label for="vehicle2"> I have a car</label><br>
+                    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                    <label for="vehicle3"> I have a boat</label><br><br>
+                </div>
+              
+            </div>
+            <div class="form-group">
+                <div style="float:right;padding:20px;background-color:gainsboro;"class="col-md-2">
+                    <label for="vehicle1">חיפוש חופשי</label><br>
+                    <input class="form-control" type="search" id="vehicle1" name="vehicle1" value="הקלד מילת חיפוש">
+                </div>
+            </div>        
+        </form>
+    </div>
+    <hr style="height:2px ;background-color:gray" />
+
+    <div style="clear:right; margin-left:auto;margin-right:auto;margin-top:100px;border:2px solid black;height:180px;width:800px;padding-bottom:0px">
+        <div style="padding:10px ;float:left; height: 70px; width: 100px; margin-right: 75px; border: 1px solid black">
+            <p style="transform:rotate(-20deg)">אזור ירושלים</p>
+        </div>
+
+        <div style="float:left;margin-left:20px;margin-top:15px;margin-bottom:27px">
+            <p style="text-align: center">שם השרות</p>
+            <p style="text-align:center">כ ו ת ר ת</p>
+            <p style="text-align:center">תאור תאור תאור תאור תאור תאור תאור תאור</p>
+            <span >fffffff<i class="glyphicon glyphicon-earphone"></i>oo<i class="fa fa-map-marker" style="font-size:20px"></i></span>
+        </div>  
+        <img style="float:right; height: 100%; width: 250px; border: 1px solid black;margin:0" />
+        <img style="float:right;height:50px; width: 70px; border: 1px solid black" />
+        <div id="flip" style="clear:left;top:160px; background-color:greenyellow;width:548px;height:22px;text-align:center;"> <i id="j"  class="glyphicon glyphicon-menu-down" style="float:left;margin-left:5px;font-size:1.5em;"></i> יותר פרטים </div>
+        <div id="panel" style="height:110px;background-color:green;margin-top:0;display:none"></div>
+    </div>
+
+
+
+</body>
+</html>

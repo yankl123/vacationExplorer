@@ -1,0 +1,173 @@
+﻿@model Dache.PL.Models.UserData
+
+@{
+    ViewData["Title"] = "NewAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 style="position:absolute;right:400px">רישום לאתר</h1>
+<br />
+@ViewBag.masage
+<hr />
+
+<p id="msg" style="color:red"></p>
+<form id="newac" asp-action="NewAccount" dir="rtl"  enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Addrese" class="control-label"></label>
+                <input asp-for="Addrese" class="form-control" />
+                <span asp-validation-for="Addrese" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" id="UserName" class="form-control" />
+                <span asp-validation-for="UserName" id="avoiduplicate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" type="password" id="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">אמת סיסמא</label>
+                <input type="password" id="confirm_password" class="form-control" />
+                <span id='message'></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LogoImage" class="control-label"></label>
+                <input dir="ltr" id="selectedimg" asp-for="LogoImage" type="file" accept="image/*" class="form-control" />
+                <span asp-validation-for="LogoImage" class="text-danger"></span>
+            </div>
+
+            <div class="form-group h-25" style="position:relative;">
+                <img id="previewimg" style="display:block;height:100%;position:absolute" src="#" alt="Alternate Text" />
+            </div>
+            <hr />
+
+            <div class="form-group">
+                <input type="submit" id="submit" value="שלח" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $('#password, #confirm_password').on('keyup', function () {
+            if ($('#password').val() == $('#confirm_password').val()) {
+                $('#message').html('<i class="fa fa-thumbs-up"></i> תואם').css('color', 'green');
+                document.getElementById("submit").removeAttribute("disabled");
+            }
+            else {
+                $('#message').html('הסיסמא לא תואמת').css('color', 'red');
+                document.getElementById("submit").disabled = true;
+            }
+
+        });
+
+
+        $("#UserName").on("change blur keyup" ,function () {
+            var formData = new FormData();
+            var un = $(this).val();
+            $(this).val(un.trim());
+            formData.append('UserName', un)
+            
+            if (un.trim().length > 0) {
+                $.ajax({
+                    url: "/Home/CheckUserName",
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response === "EXISTS") {
+                            $('#avoiduplicate').html('שם משתמש זה כבר בשימוש בחר שם משתמש אחר').css('color', 'red');
+                            document.getElementById("submit").disabled = true;
+                        }
+                        else if (response === "NOTEXISTS") {
+
+                            $('#avoiduplicate').html('<i style="color:green" class="fa fa-thumbs-up"></i>');
+                            document.getElementById("submit").removeAttribute("disabled");
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+
+        })
+
+        $("#newac").submit(function (e) {
+            e.preventDefault();
+
+            if ($('#newac').valid() === false) {
+                document.getElementById("submit").disabled = true;
+            }
+            else {
+                $('.loading').show();
+                document.getElementById("submit").removeAttribute("disabled");
+                var formData = new FormData(this);
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response === "OK") {
+                            $('.loader').hide();
+                            alert("הרישום עבר בהצלחה הנך מועבר לדף ההזדהות ");
+                            $(location).attr('href', '/home/login');
+                        }
+                        else {
+                            $('.loading').hide();
+                            alert("הרישום נכשל בדוק את תקינות הנתונים או נסה מאוחר יותר ");
+                        }
+                    },
+                    error: function () {
+                        $('loading').hide();
+                        alert("הרישום נכשל בדוק את תקינות הנתונים או נסה מאוחר יותר ");
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+                $('loading').hide();
+            }
+            $('loading').hide();
+
+        });
+
+        var x = $('.form-control', $('#newac'));
+        for (var i = 0; i < x.length; i++) {
+            $(x[i]).bind('change', function (e) {
+                document.getElementById("submit").removeAttribute("disabled");
+            });
+        }
+
+        $("#selectedimg").change(function (e) {
+            $("#previewimg").attr("src", URL.createObjectURL(e.target.files[0]))
+        })
+
+    </script>
+
+
+}

@@ -1,0 +1,151 @@
+﻿@model Dache.PL.Models.ServiceData
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<h2>ערוך פרסום חדש</h2>
+
+<form id="newserv" enctype="multipart/form-data" asp-action="Create">
+    <div class="container" dir="rtl" style="padding:15px; box-shadow:rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+        <div class="row">
+
+            <div class="col-md-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Catrgory" class="control-label"></label>
+                    <select asp-for="Catrgory" class="form-control">
+                        <option value="אוכל">אוכל</option>
+                        <option value="לינה">לינה</option>
+                        <option value="אטרקציות">אטרקציות</option>
+                        <option value="טיולים">טיולים</option>
+                        <option value="נופש רפואי">נופש רפואי</option>
+                    </select>
+                    <span asp-validation-for="Catrgory" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Head" class="control-label"></label>
+                    <input asp-for="Head" class="form-control" />
+                    <span asp-validation-for="Head" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Area" class="control-label"></label>
+                    <select asp-for="Area" class="form-control">
+                        <option value="צפון">צפון</option>
+                        <option value="דרום">דרום</option>
+                        <option value="מרכז">מרכז</option>
+                        <option value="אזור ירושלים">אזור ירושלים</option>
+                    </select>
+                    <span asp-validation-for="Area" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Addrese" class="control-label"></label>
+                    <input asp-for="Addrese" class="form-control" />
+                    <span asp-validation-for="Addrese" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="ShowImage" class="control-label"></label>
+                    <input id="selectedimg" dir="ltr" asp-for="ShowImage" type="file" accept="image/*" class="form-control" />
+                    <span asp-validation-for="ShowImage" class="text-danger"></span>
+                </div>
+
+                <div class="form-group h-75" style="border:2px solid black;position:relative">
+                    <img id="previewimg" style="display:block;width:100%;height:100%;position:absolute" src="#" alt="Alternate Text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label asp-for="MorDetiles" class="control-label"></label>
+                    <textarea asp-for="MorDetiles" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="MorDetiles" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input id="submit" type="submit" value="שלח" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="supid" asp-for="SupplierID" type="hidden" class="form-control" />
+</form>
+<br />
+<button id="back"> ❮ חזרה לרשימת הפרסומים </button>
+
+
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    $("#newserv").submit(function (e) {
+
+        if ($("#newserv").valid() === false) {
+            document.getElementById("submit").disabled = true;
+        }
+        else
+        {
+            document.getElementById("submit").removeAttribute("disabled");
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.set("SupplierID", UID);
+            formData.set("SupplierLogoUrl", suplogo);
+            console.log(formData)
+
+            $.ajax({
+                url: "/Dache/Create",
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response == "OK") {
+                        alert("הפרסום התקבל בהצלחה \nהנך מועבר לרשימה המעודכנת")
+                        usertable();
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            });
+
+        }
+    });
+    
+
+    var x = $('.form-control', $('#newserv'));
+    for (var i = 0; i < x.length; i++) {
+        $(x[i]).bind('change', function (e) {
+            document.getElementById("submit").removeAttribute("disabled");
+        });
+    }
+    $("#selectedimg").change(function (e) {
+        $("#previewimg").attr("src", URL.createObjectURL(e.target.files[0]))
+    })
+   
+    $("#back").click(usertable);
+
+</script>
+
+

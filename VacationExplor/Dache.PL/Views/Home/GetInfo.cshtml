@@ -1,0 +1,137 @@
+﻿@model IEnumerable<Dache.DP.Service>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="margin-top:120px;padding-bottom:200px;">
+    <form id="Fform" method="get">
+        <div class="col-md-3" style="float:right;margin-left:80px;background-color:gainsboro;padding-top:20px;">
+            <div id="areacheckbox" class="form-group">
+                <input type="checkbox" id="allarea" name="all" value="allarea" checked>
+                <label for="allarea">כל האזורים</label><br>
+                <br />
+                <input type="checkbox" id="north" name="north" value="צפון">
+                <label for="north"> צפון</label><br>
+                <input type="checkbox" id="south" name="vsouth" value="דרום">
+                <label for="south"> דרום</label><br>
+                <input type="checkbox" id="center" name="center" value="מרכז">
+                <label for="center"> מרכז</label><br>
+                <input type="checkbox" id="jerusalemA" name="jerusalemA" value="אזור ירושלים">
+                <label for="vehicle3">אזור ירושלים</label><br><br>
+            </div>
+        </div>
+
+        <div class="col-md-3" style="float:right;margin-left:100px;background-color:gainsboro;padding-top:20px;">
+            <div id="categorycheckbox" class="form-group">
+                @if (false)
+                {
+                    <input type="checkbox" id="allcategory" name="allcategor" value="allcat" checked>
+                }
+                else
+                {
+                    <input type="checkbox" id="allcategory" name="allcategor" value="allcat">
+                }
+                <label for="allcategory"> כל הקטגרוריות</label><br>
+                <br />
+                <input type="checkbox" id="food" name="food" value="אוכל">
+                <label for="food">אוכל</label><br>
+                <input type="checkbox" id="lodging" name="lodging" value="לינה">
+                <label for="lodging"> לינה</label><br>
+                <input type="checkbox" id="atract" name="atract" value="אטרקציות">
+                <label for="vatract"> אטרקציות</label><br>
+                <input type="checkbox" id="" name="hilth" value="נופש רפואי">
+                <label for="vhilth"> נופש רפואי</label><br><br>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div style="float:right;padding:20px;background-color:gainsboro;" class="col-md-4">
+                <label for="vehicle1">חיפוש חופשי</label><br>
+                <input dir="rtl" class="form-control" type="search" id="search" name="search" placeholder="הקלד מילת חיפוש">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                <br />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                <input style="width:80px;float:right" type="submit" class="btn btn-primary" value="חפש">
+            </div>
+        </div>
+    </form>
+</div>
+<hr style="height:2px ;background-color:gray" />
+<br />
+
+<h1>@{@Html.Raw((Model.Count() < 1) ? "לא נמצאו פרסומים תואמים לחיפוש" : " ") } </h1>
+
+@foreach (var item in Model)
+{
+<div class="mainCard">
+    <div class="areadiv">
+        <p style="transform:rotate(-20deg);font-weight:600;color:firebrick">@item.Area</p>
+    </div>
+    <div class="catdiv">
+        <p style="transform:rotate(-20deg);font-weight:600;color:green">@item.Catrgory</p>
+    </div>
+
+    <div class="mideldiv">
+        <p style="font-weight: 700;box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 7px"> @item.Name</p>
+        <p style="font-weight:600"> @item.Head</p>
+        <p style="font-weight:500;font-size:small"> @item.Description</p>
+        <span style="color:blue;font-weight:400">  <i class="glyphicon glyphicon-earphone"></i> @item.Phone  | @item.Addrese <i class="fa fa-map-marker" style="font-size:20px"></i></span>
+    </div>
+    <img class="prodactimage" src="@item.ImgUrl" />
+    <img class="logoimage" src="@item.SupplierLogoUrl" />
+    <div class="flip"> <i id="j" class="glyphicon glyphicon-menu-down" style="float:left;margin-left:5px;font-size:1.2em;"></i> יותר פרטים </div>
+</div>
+    <div  class="panel" style="background:#c7f0ff;z-index:10">@item.MorDetiles</div>
+
+}
+@section Scripts {
+    <script>
+
+        function manageCheckbox(selector) {
+            var x = $('input', $(selector));
+            var firstall = x[0];
+
+            $(x).slice(1).change(function () {
+                var checked = $(x).filter(":checked").length;
+                console.log(checked)
+                if ((checked % (x.length - 1)) === 0) {
+                    $(x).slice(1).prop("checked", false);
+                    $(firstall).prop("checked", true);
+                }
+                else { $(firstall).prop("checked", false); }
+            });
+
+            $(firstall).change(function () {
+                if ($(this).prop("checked") === true) { $(x).slice(1).prop("checked", false); }
+            })
+        }
+        manageCheckbox("#areacheckbox");
+        manageCheckbox("#categorycheckbox");
+
+        $(".flip").click(function (e) {
+            $("i", $(e.currentTarget)).toggleClass("glyphicon glyphicon-menu-up glyphicon glyphicon-menu-down");
+            $(e.currentTarget).parent().next().slideToggle();
+        })
+
+        $("#Fform").submit(function (e) {
+            e.preventDefault();
+            var areacheced = $("input", $("#areacheckbox")).filter(":checked").map(function () {
+                return $(this).val();
+            }).get().join("-");
+
+            var categorycheced = $("input", $("#categorycheckbox")).filter(":checked").map(function () {
+                return $(this).val();
+            }).get().join("-");
+            console.log(`/Home/GetInfo/-${categorycheced}/-${areacheced}` + (($("#search").val().length != 0) ? `/${$("#search").val()}` : ""))
+            location.replace(`/Home/GetInfo/-${categorycheced}/-${areacheced}` + (($("#search").val().length != 0) ? `/${$("#search").val()}` : ""));   
+        })
+
+    </script>
+}

@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "UserScope";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ברוך הבא </h1>
+
+<ul style="float: right;font-weight:700; font-size:20px">
+    <li >שלום @ViewBag.Name</li>
+    <li>כניסתך האחרונה הייתה ב:  @ViewBag.lastAccsesTime </li>
+</ul>
+<p id="Id">@ViewBag.ID</p>
+<img  id="Lul" style="height:70px;width:50px;position:absolute;left:200px;top:120px" src="@ViewBag.LogoUrl" alt="Alternate Text" />
+
+<div id="desc"></div>
+
+
+@section Scripts {
+    <script>
+        $("close").click(() => {
+            $("#msg").hide();
+        })
+
+
+        var UID = @ViewBag.ID ;
+
+        var suplogo = '@ViewBag.LogoUrl';
+        function usertable() {
+            var url = `/Home/GetInfoForUser/${UID}`;
+            doitAjax("GET",url, forInfo);
+        }
+        usertable();
+
+    </script>
+}

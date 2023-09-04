@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewData["Title"] = "ContactUs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<div dir="rtl" class="content">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 mr-auto">
+                <h2 style="text-align:center">צור קשר</h2>
+                <p style="text-align:center" class="mb-5">יש לך הערות  או הארות מצאת בעיה באתר ? אל תהסס לפנות אלינו ! אנחנו מתייחסים לכל פנייה </p>
+
+                <ul class="list-unstyled pl-md-5 mb-5">
+                    <li class="d-flex text-black mb-2">
+                        <span class="mr-3"><span class="fa fa-map-marker"></span> הרב שך 17 ביתר עילית </span>
+                    </li>
+                    <li class="d-flex text-black mb-2">
+                        <span class="mr-3"><span class="glyphicon glyphicon-flag"></span> ישראל</span>
+
+                    </li>
+                    <li class="d-flex text-black mb-2"><span class="mr-3"><span class="glyphicon glyphicon-earphone"></span></span>+972-559838007</li>
+                    <li class="d-flex text-black"><span class="mr-3"><span class="glyphicon glyphicon-envelope"> jjbhs17be@gmail.com </span></span></li>
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <form class="mb-5" method="post" id="contactForm" name="contactForm">
+                    <div class="row">
+
+                        <div class="col-md-12 form-group">
+                            <label for="name" class="col-form-label">שם</label>
+                            <input type="text" class="form-control" name="name" id="name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="email" class="col-form-label">אימייל</label>
+                            <input type="email" class="form-control" name="email" id="email" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="message" class="col-form-label">הודעה</label>
+                            <textarea class="form-control" name="message" id="message" cols="30" rows="7" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="submit" value="שלח" class="btn btn-primary rounded-0 py-2 px-4">
+                            <span class="submitting"></span>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="form-message-warning mt-4"></div>
+                <div id="form-message-success">
+                    פנייתך נשלחה בהצלחה
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $("#form-message-success").hide();
+        function suc() {
+            $("#form-message-success").show();
+        }
+
+        $("#contactForm").submit(function (e) {
+            $('.loading').show();
+            var formData =  new FormData(this)
+            e.preventDefault();
+            $.ajax({
+                url: "/Home/getmessage",
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response === "OK") { suc() } else { alert("משהו השתבש נסה מאוחר יותר או בדוק את תקינות הנתונים") }
+                    $('.loading').hide();
+                },
+                error: function () {
+                    $('.loading').hide();
+                    alert("משהו השתבש נסה מאוחר יותר")
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+           
+        })
+
+    </script>
+}
+
+

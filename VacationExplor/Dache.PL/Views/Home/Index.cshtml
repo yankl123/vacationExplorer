@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div style="margin:20px" class="text-center">
+    <h1 class="display-4">ברוכים הבאים לדאצ'ק</h1>
+    <p>חיפוש חופשי לנופש מוצלח</p>
+</div>
+<br />
+<div>
+    <div class="card" style="width: 18rem;float:right">
+        <img src="~/Images/luachmod.jpg" class="card-img-top" alt="..." />
+        <div class="card-body">
+            <a href="/home/getinfo">לוח מודעות</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+        <img src="~/Images/pirsum.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <a href="/Home/login"> ? רוצה לפרסם</a>
+        </div>
+    </div>
+</div>
+@section Scripts{ 
+    <script>
+        $(".card").click(function () {
+            window.location.href =   $('a', $(this)).attr('href');
+        })
+    </script>
+
+
+}

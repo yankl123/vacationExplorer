@@ -1,0 +1,76 @@
+﻿@model Dache.DP.Login
+
+@{
+    ViewData["Title"] = "login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+ 
+
+
+<div style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; padding:20px; margin-left:30% ;margin-top:10%" class="col-md-4">
+    <h4>הזן שם משתמש וסיסמא</h4>
+    <p>עוד לא רשום? <a href="/Home/NewAccount">הרשם עכשיו</a></p>
+    <br />
+    <form id="loginForm" asp-action="login">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="UserName" class="control-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div>
+            <span id="worn"style="color:red;display:none">שגיאה בהזנת הנתונים</span>
+        </div>
+        <div class="form-group">
+            <input type="submit" id="submit"  value="שלח" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+
+<script>
+        $("#ldr").hide();
+
+        $("#loginForm").submit(function (e) {
+            var formData = new FormData(this)
+
+            var valid = null;
+          
+                $.ajax({
+                    url: "/Home/CheckUserName",
+                    type: 'POST',
+                    data: formData,
+                    success: function (respunse) {
+                        valid = respunse;
+                    } ,
+                    async:false ,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+         
+
+            if (valid == "EXISTS") {
+                    $("body").prop("disabled", true);
+                    $("#ldr").show();
+                    $("#worn").hide();
+                    return;
+                }
+                else if (valid == "NOTEXISTS") {
+                    $("#worn").show();
+                }
+         
+            e.preventDefault();
+        })
+                       
+</script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

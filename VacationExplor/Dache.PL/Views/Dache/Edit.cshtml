@@ -1,0 +1,173 @@
+﻿@model Dache.PL.Models.ServiceData
+@{var cv = ViewBag.curentvalues;}
+@{ Layout = null;}
+
+<h4>עריכת פרסום קיים</h4>
+<hr />
+<form id="EditForm" method="post" enctype="multipart/form-data" asp-action="Edit">
+    <div class="container" dir="rtl" style="padding:15px; box-shadow:rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+        <div class="row">
+            <div class="col-md-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="Id" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" value="@cv.Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Catrgory" class="control-label"></label>
+                    <select asp-for="Catrgory" class="form-control">
+                        <option value="@cv.Catrgory" selected hidden>@cv.Catrgory</option>
+                        <option value="אוכל">אוכל</option>
+                        <option value="לינה">לינה</option>
+                        <option value="אטרקציות">אטרקציות</option>
+                        <option value="יולים">טיולים</option>
+                        <option value="נופש רפואי">נופש רפואי</option>
+                    </select>
+                    <span asp-validation-for="Catrgory" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Head" class="control-label"></label>
+                    <input asp-for="Head" value="@cv.Head" class="form-control" />
+                    <span asp-validation-for="Head" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Area" class="control-label"></label>
+                    <select asp-for="Area" class="form-control">
+                        <option value="@cv.Area" selected hidden>@cv.Area</option>
+                        <option value="צפון">צפון</option>
+                        <option value="דרום">דרום</option>
+                        <option value="מרכז">מרכז</option>
+                        <option value="אזור ירושלים">אזור ירושלים</option>
+                    </select>
+                    <span asp-validation-for="Area" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Addrese" class="control-label"></label>
+                    <input asp-for="Addrese" value="@cv.Addrese" class="form-control" />
+                    <span asp-validation-for="Addrese" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input id="Phone" dir="ltr" asp-for="Phone" value="@cv.Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="ShowImage" class="control-label"></label>
+                    <input id="selectedimg" dir="ltr" asp-for="ShowImage" type="file" accept="image/*" class="form-control" />
+                    <span asp-validation-for="ShowImage" class="text-danger"></span>
+                </div>
+
+                <div class="form-group h-75"  style="border:2px solid black;position:relative">
+                    <img id="previewimg" style="display:block;width:100%;height:100%;position:absolute" src="@cv.ImgUrl" alt="Alternate Text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" value="@cv.Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label asp-for="MorDetiles" class="control-label"></label>
+                    <textarea asp-for="MorDetiles" class="form-control" rows="4">@cv.MorDetiles </textarea>
+                    <span asp-validation-for="MorDetiles" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="שלח" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+<button id="back"> ❮ חזרה לרשימת הפרסומים </button>
+
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    var somthingchanged = false;
+    $("textarea").html("@cv.MorDetiles")
+    var curentvalues = @Json.Serialize(ViewBag.curentvalues);
+
+    var LKcurentvalues = curentvalues;
+        for (var key in LKcurentvalues) {
+            if (LKcurentvalues.hasOwnProperty(key)) {
+                LKcurentvalues[key.charAt(0).toUpperCase() + key.substring(1)] = LKcurentvalues[key];
+                delete LKcurentvalues[key];
+            }
+        }
+
+    curentvalues = LKcurentvalues;
+    var keys = (Object.keys(curentvalues));
+    $("#EditForm").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        var Sid = curentvalues["Id"];
+        formData.set("Id", Sid);
+        for (var i = 1 ; i < keys.length -3 ; i++) {
+            if (curentvalues[keys[i]] === formData.get(keys[i])) {
+                formData.set(keys[i], null);
+            }
+            else
+            {
+                somthingchanged = true;
+            }
+
+        }
+        if (somthingchanged && $("#EditForm").valid() === true) {
+            $.ajax({
+                url: `/Dache/Edit/${Sid}`,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response === "OK") {
+                        var r = confirm("השינויים התעדכנו בהצלחה :לחזור לרשימת הפרסומים ?\nלהמשך עריכה הקש ביטול");
+                        if (r == true) {
+                            usertable()
+                        }
+                    }
+                    else {
+                        alert(response);
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            });
+        }
+        else
+        {
+            alert($("#EditForm").valid() === true  ? "לא שינית כלום בינתיים" : "מילוי לא תקין של הטופס")
+        }
+
+    });
+
+    $("#selectedimg").change(function (e) {
+        $("#previewimg").attr("src", URL.createObjectURL(e.target.files[0]))
+        somthingchanged = true;
+    })
+
+    $("#back").click(usertable);
+
+</script>
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dache.PL</title>
+    <link rel="stylesheet" href="~/css/project.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body style="background:#eaf1f8">
+    <div class="loading"><div class="loader"></div><p1>אנא המתן הפעולה עשוייה להתמשך מספר דקות ...</p1> </div>
+    <header style="font-family:cursive">Dachek </header>
+    <div class="hamburger-menu">
+        <div id="buth" class="hamburger"></div>
+    </div>
+    <navbar class="sliding-navbar">
+        <ul class="navbar--items">
+            <li class="navbar--item"><a style="color:yellow" href="/">דף הבית </a></li>
+            <li class="navbar--item"><a style="color:yellow" href="/home/getinfo">לוח מודעות</a></li>
+            <li class="navbar--item"><a style="color:yellow" href="/Home/login"> ? רוצה לפרסם</a></li>
+            <li class="navbar--item"><a style="color:yellow" href="/Home/About">אודות</a></li>
+            <li class="navbar--item"><a style="color:yellow" href="/Home/ContactUs">צור קשר</a></li>
+            <li class="navbar--item"><a style="color:yellow" href="https://drive.google.com/uc?export=download&id=1hqsveXhld23vRPgtENctmCYVazTTvC5y" download>qa..</a></li>
+        </ul>
+    </navbar>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <footer class="border-top footer text-muted">
+        
+        <div>
+            &copy; 2021 - Dache.PL - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/js/project.js?v=1" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

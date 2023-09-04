@@ -1,0 +1,188 @@
+﻿@model IEnumerable<Dache.DP.Service>
+
+@{
+    ViewData["Title"] = "GetInfo";
+    Layout = null;
+}
+
+<h1>@{@Html.Raw((Model.Count() > 0 ) ? "להלן רשימת הפרסומים" : "רשימת הפרסומים ריקה")  } </h1>
+<br/>
+<div>
+    <button style="padding:7px ;background:#4AC948;color:blue;border:none;box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);"  id="newAdd">הוסף פרסום חדש + </button>
+</div>
+<br />
+
+
+<table class="mytable" dir="rtl">
+    @if (Model.Count() > 0)
+    {
+        <thead>
+
+            <tr>
+                <th>
+                    זיהוי
+                </th>
+                <th>
+                    שם העסק
+                </th>
+                <th>
+                    קטגורייה
+                </th>
+                <th>
+                    כותרת
+                </th>
+                <th>
+                    תאור
+                </th>
+                <th>
+                    אזור
+                </th>
+                <th>
+                    מיקום
+                </th>
+                <th>
+                    טלפון
+                </th>
+                <th colspan="1">פעולות</th>
+            </tr>
+            <tr>
+                <th colspan="6">פרטים נוספים ❯❯</th>
+                <th colspan="2">תמונה</th>
+            </tr>
+
+        </thead>
+
+    }
+
+
+
+    <tbody id="Uadvertisings">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Catrgory
+                </td>
+                <td>
+                    @item.Head
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.Area
+                </td>
+                <td>
+                    @item.Addrese
+                </td>
+                <td>
+                    @item.Phone
+                </td>
+                <td style="padding-right:3px">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    @Html.ActionLink("ערוך", "Edit", "Dache", new { id = item.Id }) |
+                    <span class="glyphicon glyphicon-trash"></span>
+                    @Html.ActionLink("הסר", "DeleteService", "Dache" , new { id=item.Id }) |
+                </td>
+            </tr>
+            <tr>
+                <td class="mord" colspan="6">
+                    @Html.DisplayFor(modelItem => item.MorDetiles)
+                </td>
+                <td class="mord" colspan="2"> <img style="display:block; width:100%; height:100%" src="@item.ImgUrl" /> </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+
+
+    $("#newAdd").click(function() {
+        doitAjax("GET","/Dache/Create", forCreate);
+    });
+
+
+    function forDelete(elem, url) {
+        var delId = url.split("/")[3];
+        if (confirm(`האם אתה בטוח שאתה רוצה למחוק את ${delId}`)) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (response) {
+                    if (response === "OK") {
+                        $(elem).parent().children().hide();
+                        $(elem).parent().parent().fadeTo(0, 0.4)
+                        $(elem).parent().parent().next().fadeTo(0, 0.4);
+                        $(elem).parent().parent().hide(2000);
+                        $(elem).parent().parent().next().hide(2000);
+                        $(elem).parent().parent().remove();
+                        $(elem).parent().parent().next().remove();
+                        $('tr').css('background', 'none');
+                        $('table tr:nth-child(4n)').css('background', '#F0E0E0E0');
+                        $('table tr:nth-child(4n-1)').css('background', '#F0E0E0E0');
+                        alert(`פרסום ${delId} הוסר בהצלחה`);
+                    }
+                    else {
+                        alert("הפעולה לא הושלמה נסה שוב ")
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            });   
+        }
+    }
+
+    var x = $('a', $('#Uadvertisings'));
+    for (var i = 0; i < x.length; i++) {
+        $(x[i]).bind('click', function (e) {
+            e.preventDefault();
+            var curentelem = $(this);
+            var url = $(this).attr('href');
+            if (url.startsWith("/Dache/Edit/")) {doitAjax("GET", url, forEdit);}
+            if (url.startsWith("/Dache/DeleteService/"))
+            {
+                forDelete(curentelem, url);   
+            }
+        });
+    }
+
+
+
+    var ics = $('span', $('#Uadvertisings'));
+
+    for (var i = 0; i < ics.length; i++) {
+
+        $(ics[i]).hover(function myfunction() {
+            $(this).css("background", "#C8C8C8");
+        }, function () {
+                $(this).css("background", "");
+        })
+
+        $(ics[i]).bind('click', function (e) {
+               
+            var url = $(this).next().attr('href');
+            if (url.startsWith("/Dache/Edit/")) {
+                doitAjax("GET", url, forEdit);
+            }
+
+            if (url.startsWith("/Dache/DeleteService/")) {
+                forDelete($(this), url)
+            }
+        });
+    }
+
+   
+
+</script>
+
+
+
+
