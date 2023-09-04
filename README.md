@@ -31,9 +31,9 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Prerequisites
 
-- Visual Studio (or another C# development environment)
-- .NET Framework (version 6.0)
-- SQL Server (or another database server)
+- Visual Studio 2022 or another compatible C# development environment
+- .NET 6 SDK (Software Development Kit)
+- SQL Server (or another compatible database server)
 
 ### Installation
 
